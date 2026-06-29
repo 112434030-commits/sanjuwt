@@ -8,7 +8,7 @@
 <h5>My First Heading</h5>
 <h6>My First Heading</h6>
 <p>My first paragraph.</p>
-<p>My second paragraph.</p>
+
 
 </body>
 </html>
