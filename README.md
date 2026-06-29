@@ -7,8 +7,5 @@
 <h4>My First Heading</h4>
 <h5>My First Heading</h5>
 <h6>My First Heading</h6>
-<p>My first paragraph.</p>
-
-
 </body>
 </html>
