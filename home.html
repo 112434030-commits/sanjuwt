@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideOn - Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        Ride<span>On</span>
+    </div>
+
+    <div>
+        <a href="home.html">Home</a>
+        <a href="vehicle.html">Vehicles</a>
+        <a href="feedback.html">Feedback</a>
+    </div>
+
+</nav>
+
+
+<div class="page-container">
+
+    <div class="hero">
+
+        <h1>Where do you want to go?</h1>
+
+        <p>
+            Book your ride quickly and safely with RideOn.
+        </p>
+
+    </div>
+
+
+    <div class="booking-card">
+
+        <h2>Book Your Ride</h2>
+
+        <form id="bookingForm">
+
+            <label>Pickup Location</label>
+
+            <input
+                type="text"
+                id="pickup"
+                placeholder="Enter pickup location"
+                maxlength="255"
+                required
+            >
+
+
+            <label>Destination</label>
+
+            <input
+                type="text"
+                id="destination"
+                placeholder="Enter destination"
+                maxlength="255"
+                required
+            >
+
+
+            <label>Travel Date</label>
+
+            <input
+                type="date"
+                id="rideDate"
+                required
+            >
+
+
+            <label>Travel Time</label>
+
+            <input
+                type="time"
+                id="rideTime"
+                required
+            >
+
+
+            <button type="submit" class="btn">
+                Find Vehicles
+            </button>
+
+        </form>
+
+        <p id="bookingMessage"></p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const today =
+    new Date().toISOString().split("T")[0];
+
+document.getElementById("rideDate").min = today;
+
+
+document.getElementById("bookingForm").addEventListener(
+    "submit",
+    async function(e) {
+
+        e.preventDefault();
+
+
+        const pickup =
+            document.getElementById("pickup").value.trim();
+
+        const destination =
+            document.getElementById("destination").value.trim();
+
+        const rideDate =
+            document.getElementById("rideDate").value;
+
+        const rideTime =
+            document.getElementById("rideTime").value;
+
+
+        if (pickup.length < 2) {
+
+            document.getElementById("bookingMessage").textContent =
+                "Please enter a valid pickup location.";
+
+            return;
+        }
+
+
+        if (destination.length < 2) {
+
+            document.getElementById("bookingMessage").textContent =
+                "Please enter a valid destination.";
+
+            return;
+        }
+
+
+        if (pickup.toLowerCase() === destination.toLowerCase()) {
+
+            document.getElementById("bookingMessage").textContent =
+                "Pickup and destination cannot be the same.";
+
+            return;
+        }
+
+
+        if (!rideDate || !rideTime) {
+
+            document.getElementById("bookingMessage").textContent =
+                "Please select date and time.";
+
+            return;
+        }
+
+
+        const selectedDateTime =
+            new Date(rideDate + "T" + rideTime);
+
+        if (selectedDateTime < new Date()) {
+
+            document.getElementById("bookingMessage").textContent =
+                "Please select a future date and time.";
+
+            return;
+        }
+
+
+        const data = new FormData();
+
+        data.append("pickup", pickup);
+        data.append("destination", destination);
+        data.append("ride_date", rideDate);
+        data.append("ride_time", rideTime);
+
+
+        try {
+
+            const response = await fetch("home.php", {
+                method: "POST",
+                body: data
+            });
+
+            const result = await response.json();
+
+
+            document.getElementById("bookingMessage").textContent =
+                result.message;
+
+
+            if (result.success) {
+
+                localStorage.setItem(
+                    "booking_id",
+                    result.booking_id
+                );
+
+                localStorage.setItem(
+                    "pickup",
+                    pickup
+                );
+
+                localStorage.setItem(
+                    "destination",
+                    destination
+                );
+
+
+                window.location.href =
+                    "vehicle.html";
+            }
+
+        } catch (error) {
+
+            document.getElementById("bookingMessage").textContent =
+                "Server error. Please try again.";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>

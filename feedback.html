@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideOn - Feedback</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        Ride<span>On</span>
+    </div>
+
+    <div>
+        <a href="home.html">
+            Book Another Ride
+        </a>
+    </div>
+
+</nav>
+
+
+<div class="page-container">
+
+    <div class="feedback-card">
+
+        <h1>How was your ride?</h1>
+
+        <p>
+            Your feedback helps us improve RideOn.
+        </p>
+
+
+        <form id="feedbackForm">
+
+
+            <div class="rating">
+
+                <label>
+                    <input
+                        type="radio"
+                        name="rating"
+                        value="1"
+                        required
+                    >
+                    ⭐
+                </label>
+
+
+                <label>
+                    <input
+                        type="radio"
+                        name="rating"
+                        value="2"
+                    >
+                    ⭐⭐
+                </label>
+
+
+                <label>
+                    <input
+                        type="radio"
+                        name="rating"
+                        value="3"
+                    >
+                    ⭐⭐⭐
+                </label>
+
+
+                <label>
+                    <input
+                        type="radio"
+                        name="rating"
+                        value="4"
+                    >
+                    ⭐⭐⭐⭐
+                </label>
+
+
+                <label>
+                    <input
+                        type="radio"
+                        name="rating"
+                        value="5"
+                    >
+                    ⭐⭐⭐⭐⭐
+                </label>
+
+            </div>
+
+
+            <textarea
+                id="comment"
+                placeholder="Write your feedback..."
+                rows="6"
+                maxlength="500"
+            ></textarea>
+
+
+            <button
+                type="submit"
+                class="btn">
+                Submit Feedback
+            </button>
+
+
+        </form>
+
+
+        <p id="feedbackMessage"></p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const bookingId =
+    localStorage.getItem("booking_id");
+
+
+if (!bookingId) {
+
+    alert("No booking found.");
+
+    window.location.href =
+        "home.html";
+}
+
+
+document.getElementById(
+    "feedbackForm"
+).addEventListener(
+    "submit",
+    async function(e) {
+
+        e.preventDefault();
+
+
+        const ratingElement =
+            document.querySelector(
+                'input[name="rating"]:checked'
+            );
+
+
+        if (!ratingElement) {
+
+            document.getElementById(
+                "feedbackMessage"
+            ).textContent =
+                "Please select a rating.";
+
+            return;
+        }
+
+
+        const rating =
+            Number(ratingElement.value);
+
+
+        if (rating < 1 || rating > 5) {
+
+            document.getElementById(
+                "feedbackMessage"
+            ).textContent =
+                "Rating must be between 1 and 5.";
+
+            return;
+        }
+
+
+        const comment =
+            document.getElementById(
+                "comment"
+            ).value.trim();
+
+
+        if (comment.length > 500) {
+
+            document.getElementById(
+                "feedbackMessage"
+            ).textContent =
+                "Feedback cannot exceed 500 characters.";
+
+            return;
+        }
+
+
+        const data = new FormData();
+
+        data.append(
+            "booking_id",
+            bookingId
+        );
+
+        data.append(
+            "rating",
+            rating
+        );
+
+        data.append(
+            "comment",
+            comment
+        );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "feedback.php",
+                    {
+                        method: "POST",
+                        body: data
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            document.getElementById(
+                "feedbackMessage"
+            ).textContent =
+                result.message;
+
+
+            if (result.success) {
+
+                localStorage.clear();
+
+
+                setTimeout(function() {
+
+                    window.location.href =
+                        "home.html";
+
+                }, 1500);
+
+            }
+
+        } catch (error) {
+
+            document.getElementById(
+                "feedbackMessage"
+            ).textContent =
+                "Server error. Please try again.";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>

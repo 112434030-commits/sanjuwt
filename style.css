@@ -1,0 +1,339 @@
+```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7fb;
+    color: #222;
+}
+
+/* NAVBAR */
+
+.navbar {
+    height: 70px;
+    background: #111827;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8%;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #22c55e;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-left: 25px;
+}
+
+/* AUTH */
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #111827, #1f2937);
+}
+
+.auth-box {
+    background: white;
+    width: 400px;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
+.auth-box .logo {
+    color: #111827;
+    text-align: center;
+}
+
+.subtitle {
+    text-align: center;
+    margin: 10px 0 30px;
+    color: #666;
+}
+
+.auth-box h2 {
+    margin-bottom: 20px;
+}
+
+/* INPUTS */
+
+input,
+textarea {
+    width: 100%;
+    padding: 13px;
+    margin: 8px 0 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: #22c55e;
+}
+
+/* BUTTON */
+
+.btn {
+    width: 100%;
+    padding: 13px;
+    background: #22c55e;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    background: #16a34a;
+    transform: translateY(-1px);
+}
+
+/* TEXT */
+
+.switch-text {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+}
+
+.switch-text a {
+    color: #16a34a;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#message,
+#bookingMessage,
+#vehicleMessage,
+#paymentMessage,
+#feedbackMessage {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* MAIN */
+
+.page-container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 50px auto;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.hero h1 {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    color: #666;
+    font-size: 18px;
+}
+
+/* BOOKING */
+
+.booking-card {
+    background: white;
+    max-width: 600px;
+    margin: auto;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.booking-card h2 {
+    margin-bottom: 25px;
+}
+
+.booking-card label {
+    font-weight: bold;
+}
+
+/* PAGE TITLE */
+
+.page-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.location-summary {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+/* VEHICLES */
+
+.vehicle-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.vehicle-card {
+    background: white;
+    text-align: center;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.vehicle-icon {
+    font-size: 60px;
+    margin-bottom: 15px;
+}
+
+.vehicle-card h2 {
+    margin-bottom: 10px;
+}
+
+.vehicle-card p {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.vehicle-card h3 {
+    margin-bottom: 20px;
+    font-size: 25px;
+}
+
+.vehicle-card .btn {
+    width: 100%;
+}
+
+/* PAYMENT */
+
+.payment-card,
+.feedback-card {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+.payment-card h1,
+.feedback-card h1 {
+    margin-bottom: 25px;
+}
+
+.ride-summary {
+    background: #f3f4f6;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+}
+
+.ride-summary p {
+    margin-bottom: 12px;
+}
+
+.total {
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.payment-option {
+    display: block;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.payment-option input {
+    width: auto;
+    margin-right: 10px;
+}
+
+/* FEEDBACK */
+
+.feedback-card {
+    text-align: center;
+}
+
+.feedback-card p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.rating {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.rating label {
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.rating input {
+    width: auto;
+    margin-right: 10px;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+    .navbar {
+        padding: 0 20px;
+    }
+
+    .navbar a {
+        margin-left: 10px;
+        font-size: 14px;
+    }
+
+    .vehicle-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .auth-box {
+        width: 90%;
+        padding: 30px;
+    }
+
+    .page-container {
+        width: 92%;
+    }
+}
+```

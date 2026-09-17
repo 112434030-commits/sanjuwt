@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideOn - Vehicles</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        Ride<span>On</span>
+    </div>
+
+    <div>
+        <a href="home.html">Home</a>
+        <a href="vehicle.html">Vehicles</a>
+        <a href="feedback.html">Feedback</a>
+    </div>
+
+</nav>
+
+
+<div class="page-container">
+
+    <h1 class="page-title">
+        Choose Your Ride
+    </h1>
+
+
+    <div class="location-summary">
+
+        <p>
+            <strong>Pickup:</strong>
+            <span id="pickup"></span>
+        </p>
+
+        <p>
+            <strong>Destination:</strong>
+            <span id="destination"></span>
+        </p>
+
+    </div>
+
+
+    <div class="vehicle-grid">
+
+
+        <div class="vehicle-card">
+
+            <div class="vehicle-icon">
+                🏍️
+            </div>
+
+            <h2>Bike</h2>
+
+            <p>
+                Fast and affordable
+            </p>
+
+            <h3>₹50</h3>
+
+            <button
+                onclick="selectVehicle('Bike', 50)"
+                class="btn">
+                Select Bike
+            </button>
+
+        </div>
+
+
+        <div class="vehicle-card">
+
+            <div class="vehicle-icon">
+                🛺
+            </div>
+
+            <h2>Auto</h2>
+
+            <p>
+                Comfortable city travel
+            </p>
+
+            <h3>₹90</h3>
+
+            <button
+                onclick="selectVehicle('Auto', 90)"
+                class="btn">
+                Select Auto
+            </button>
+
+        </div>
+
+
+        <div class="vehicle-card">
+
+            <div class="vehicle-icon">
+                🚗
+            </div>
+
+            <h2>Car</h2>
+
+            <p>
+                Premium comfortable ride
+            </p>
+
+            <h3>₹150</h3>
+
+            <button
+                onclick="selectVehicle('Car', 150)"
+                class="btn">
+                Select Car
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <p id="vehicleMessage"></p>
+
+</div>
+
+
+<script>
+
+const bookingId =
+    localStorage.getItem("booking_id");
+
+
+if (!bookingId) {
+
+    alert("Please create a booking first.");
+
+    window.location.href = "home.html";
+}
+
+
+document.getElementById("pickup").textContent =
+    localStorage.getItem("pickup") || "-";
+
+
+document.getElementById("destination").textContent =
+    localStorage.getItem("destination") || "-";
+
+
+async function selectVehicle(vehicle, fare) {
+
+
+    const allowedVehicles = [
+        "Bike",
+        "Auto",
+        "Car"
+    ];
+
+
+    if (!allowedVehicles.includes(vehicle)) {
+
+        document.getElementById("vehicleMessage").textContent =
+            "Invalid vehicle selected.";
+
+        return;
+    }
+
+
+    if (fare <= 0) {
+
+        document.getElementById("vehicleMessage").textContent =
+            "Invalid fare.";
+
+        return;
+    }
+
+
+    const data = new FormData();
+
+    data.append(
+        "booking_id",
+        bookingId
+    );
+
+    data.append(
+        "vehicle",
+        vehicle
+    );
+
+    data.append(
+        "fare",
+        fare
+    );
+
+
+    try {
+
+        const response = await fetch("vehicle.php", {
+            method: "POST",
+            body: data
+        });
+
+
+        const result = await response.json();
+
+
+        document.getElementById("vehicleMessage").textContent =
+            result.message;
+
+
+        if (result.success) {
+
+            localStorage.setItem(
+                "vehicle",
+                vehicle
+            );
+
+            localStorage.setItem(
+                "fare",
+                fare
+            );
+
+
+            window.location.href =
+                "payment.html";
+        }
+
+    } catch (error) {
+
+        document.getElementById("vehicleMessage").textContent =
+            "Server error. Please try again.";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

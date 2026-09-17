@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideOn - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <div class="auth-box">
+
+        <div class="logo">Ride<span>On</span></div>
+        <p class="subtitle">Your ride, your way.</p>
+
+        <!-- LOGIN -->
+        <div id="loginSection">
+
+            <h2>Welcome Back</h2>
+
+            <form id="loginForm">
+
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="Email Address"
+                    maxlength="150"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="Password"
+                    maxlength="100"
+                    required
+                >
+
+                <button type="submit" class="btn">
+                    Login
+                </button>
+
+            </form>
+
+            <p class="switch-text">
+                Don't have an account?
+                <a href="#" onclick="showRegister()">Register</a>
+            </p>
+
+        </div>
+
+
+        <!-- REGISTER -->
+        <div id="registerSection" style="display:none;">
+
+            <h2>Create Account</h2>
+
+            <form id="registerForm">
+
+                <input
+                    type="text"
+                    id="registerName"
+                    placeholder="Full Name"
+                    maxlength="100"
+                    required
+                >
+
+                <input
+                    type="email"
+                    id="registerEmail"
+                    placeholder="Email Address"
+                    maxlength="150"
+                    required
+                >
+
+                <input
+                    type="tel"
+                    id="registerPhone"
+                    placeholder="10-digit Phone Number"
+                    maxlength="10"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="registerPassword"
+                    placeholder="Password"
+                    maxlength="100"
+                    required
+                >
+
+                <small>
+                    Password must contain at least 6 characters.
+                </small>
+
+                <button type="submit" class="btn">
+                    Register
+                </button>
+
+            </form>
+
+            <p class="switch-text">
+                Already have an account?
+                <a href="#" onclick="showLogin()">Login</a>
+            </p>
+
+        </div>
+
+        <p id="message"></p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function showRegister() {
+
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("registerSection").style.display = "block";
+
+    document.getElementById("message").textContent = "";
+}
+
+
+function showLogin() {
+
+    document.getElementById("registerSection").style.display = "none";
+    document.getElementById("loginSection").style.display = "block";
+
+    document.getElementById("message").textContent = "";
+}
+
+
+/* NAME VALIDATION */
+
+function validateName(name) {
+
+    return /^[A-Za-z ]{2,100}$/.test(name.trim());
+}
+
+
+/* PHONE VALIDATION */
+
+function validatePhone(phone) {
+
+    return /^[6-9][0-9]{9}$/.test(phone);
+}
+
+
+/* REGISTER */
+
+document.getElementById("registerForm").addEventListener(
+    "submit",
+    async function(e) {
+
+        e.preventDefault();
+
+        const name =
+            document.getElementById("registerName").value.trim();
+
+        const email =
+            document.getElementById("registerEmail").value.trim();
+
+        const phone =
+            document.getElementById("registerPhone").value.trim();
+
+        const password =
+            document.getElementById("registerPassword").value;
+
+
+        if (!validateName(name)) {
+
+            document.getElementById("message").textContent =
+                "Name should contain only letters and spaces.";
+
+            return;
+        }
+
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+
+            document.getElementById("message").textContent =
+                "Please enter a valid email address.";
+
+            return;
+        }
+
+
+        if (!validatePhone(phone)) {
+
+            document.getElementById("message").textContent =
+                "Enter a valid 10-digit Indian phone number.";
+
+            return;
+        }
+
+
+        if (password.length < 6) {
+
+            document.getElementById("message").textContent =
+                "Password must contain at least 6 characters.";
+
+            return;
+        }
+
+
+        const data = new FormData();
+
+        data.append("action", "register");
+        data.append("name", name);
+        data.append("email", email);
+        data.append("phone", phone);
+        data.append("password", password);
+
+
+        try {
+
+            const response = await fetch("login.php", {
+                method: "POST",
+                body: data
+            });
+
+            const result = await response.json();
+
+            document.getElementById("message").textContent =
+                result.message;
+
+            if (result.success) {
+
+                document.getElementById("registerForm").reset();
+
+                setTimeout(showLogin, 1000);
+            }
+
+        } catch (error) {
+
+            document.getElementById("message").textContent =
+                "Server error. Please try again.";
+
+        }
+
+    }
+);
+
+
+/* LOGIN */
+
+document.getElementById("loginForm").addEventListener(
+    "submit",
+    async function(e) {
+
+        e.preventDefault();
+
+        const email =
+            document.getElementById("loginEmail").value.trim();
+
+        const password =
+            document.getElementById("loginPassword").value;
+
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+
+            document.getElementById("message").textContent =
+                "Please enter a valid email address.";
+
+            return;
+        }
+
+
+        if (password.length < 6) {
+
+            document.getElementById("message").textContent =
+                "Invalid password.";
+
+            return;
+        }
+
+
+        const data = new FormData();
+
+        data.append("action", "login");
+        data.append("email", email);
+        data.append("password", password);
+
+
+        try {
+
+            const response = await fetch("login.php", {
+                method: "POST",
+                body: data
+            });
+
+            const result = await response.json();
+
+            document.getElementById("message").textContent =
+                result.message;
+
+
+            if (result.success) {
+
+                window.location.href = "home.html";
+            }
+
+        } catch (error) {
+
+            document.getElementById("message").textContent =
+                "Server error. Please try again.";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>

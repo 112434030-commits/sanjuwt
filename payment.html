@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideOn - Payment</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        Ride<span>On</span>
+    </div>
+
+</nav>
+
+
+<div class="page-container">
+
+    <div class="payment-card">
+
+        <h1>Payment</h1>
+
+
+        <div class="ride-summary">
+
+            <p>
+                <strong>Pickup:</strong>
+                <span id="pickup"></span>
+            </p>
+
+            <p>
+                <strong>Destination:</strong>
+                <span id="destination"></span>
+            </p>
+
+            <p>
+                <strong>Vehicle:</strong>
+                <span id="vehicle"></span>
+            </p>
+
+            <p class="total">
+                Total Fare:
+                ₹<span id="fare"></span>
+            </p>
+
+        </div>
+
+
+        <h3>Select Payment Method</h3>
+
+
+        <form id="paymentForm">
+
+            <label class="payment-option">
+
+                <input
+                    type="radio"
+                    name="method"
+                    value="Cash"
+                    required
+                >
+
+                Cash
+
+            </label>
+
+
+            <label class="payment-option">
+
+                <input
+                    type="radio"
+                    name="method"
+                    value="UPI"
+                >
+
+                UPI
+
+            </label>
+
+
+            <label class="payment-option">
+
+                <input
+                    type="radio"
+                    name="method"
+                    value="Card"
+                >
+
+                Card
+
+            </label>
+
+
+            <button type="submit" class="btn">
+                Confirm Payment
+            </button>
+
+        </form>
+
+
+        <p id="paymentMessage"></p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const bookingId =
+    localStorage.getItem("booking_id");
+
+const fare =
+    Number(localStorage.getItem("fare"));
+
+
+if (!bookingId || !fare) {
+
+    alert("Please select a vehicle first.");
+
+    window.location.href =
+        "vehicle.html";
+}
+
+
+document.getElementById("pickup").textContent =
+    localStorage.getItem("pickup") || "-";
+
+
+document.getElementById("destination").textContent =
+    localStorage.getItem("destination") || "-";
+
+
+document.getElementById("vehicle").textContent =
+    localStorage.getItem("vehicle") || "-";
+
+
+document.getElementById("fare").textContent =
+    fare.toFixed(2);
+
+
+document.getElementById("paymentForm").addEventListener(
+    "submit",
+    async function(e) {
+
+        e.preventDefault();
+
+
+        const methodElement =
+            document.querySelector(
+                'input[name="method"]:checked'
+            );
+
+
+        if (!methodElement) {
+
+            document.getElementById("paymentMessage").textContent =
+                "Please select a payment method.";
+
+            return;
+        }
+
+
+        const method =
+            methodElement.value;
+
+
+        const allowedMethods = [
+            "Cash",
+            "UPI",
+            "Card"
+        ];
+
+
+        if (!allowedMethods.includes(method)) {
+
+            document.getElementById("paymentMessage").textContent =
+                "Invalid payment method.";
+
+            return;
+        }
+
+
+        const data = new FormData();
+
+        data.append(
+            "booking_id",
+            bookingId
+        );
+
+        data.append(
+            "payment_method",
+            method
+        );
+
+        data.append(
+            "amount",
+            fare
+        );
+
+
+        try {
+
+            const response = await fetch(
+                "payment.php",
+                {
+                    method: "POST",
+                    body: data
+                }
+            );
+
+
+            const result =
+                await response.json();
+
+
+            document.getElementById(
+                "paymentMessage"
+            ).textContent =
+                result.message;
+
+
+            if (result.success) {
+
+                localStorage.setItem(
+                    "payment_id",
+                    result.payment_id
+                );
+
+
+                setTimeout(function() {
+
+                    window.location.href =
+                        "feedback.html";
+
+                }, 1000);
+
+            }
+
+        } catch (error) {
+
+            document.getElementById(
+                "paymentMessage"
+            ).textContent =
+                "Server error. Please try again.";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
